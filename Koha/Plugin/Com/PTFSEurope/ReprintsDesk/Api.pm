@@ -241,7 +241,7 @@ sub _populate_missing_properties {
             $metadata_name = $element;
             $config_name = $element;
         }
-        if (defined $config->{use_borrower_details}) {
+        if (defined $config->{use_borrower_details} && $config->{use_borrower_details} == 1 ) {
             if (!$metadata->{$section}->{$metadata_name}) {
                 # The borrower doesn't have the necessary bit of info
                 # attempt to use the value from the config
