@@ -113,6 +113,16 @@
             [% END %]
             <p>When placing an order, should the borrower's information be used for delivery details? If this box is not checked, the details supplied below will be used. If it is checked and the borrower's details are not complete, relevant portions from the detail's below will be used. (Reprints Desk requires all the details listed below for order placement)</p>
         </div>
+        <div id="reprintsdesk_deliveryprofile_firstname" class="ill_config_field">
+            <label for="reprintsdesk_deliveryprofile_firstname_input">Fallback delivery first name: </label>
+            <input id="reprintsdesk_deliveryprofile_firstname_input" class="required_input" placeholder="Enter first name" type="text" name="firstname" value="[% config.firstname | html %]">
+            <p>If the patron does not have a first name, provide a value to use.</p>
+        </div>
+        <div id="reprintsdesk_deliveryprofile_lastname" class="ill_config_field">
+            <label for="reprintsdesk_deliveryprofile_firstname_input">Fallback delivery last name: </label>
+            <input id="reprintsdesk_deliveryprofile_lastname_input" class="required_input" placeholder="Enter last name" type="text" name="lastname" value="[% config.lastname | html %]">
+            <p>If the patron does not have a last name, provide a value to use.</p>
+        </div>
         <div id="reprintsdesk_deliveryprofile_address1" class="ill_config_field">
             <label for="reprintsdesk_deliveryprofile_address1_input">Fallback delivery first line of address: </label>
             <input id="reprintsdesk_deliveryprofile_address1_input" class="required_input" placeholder="Enter first line of address" type="text" name="address1" value="[% config.address1 | html %]">
