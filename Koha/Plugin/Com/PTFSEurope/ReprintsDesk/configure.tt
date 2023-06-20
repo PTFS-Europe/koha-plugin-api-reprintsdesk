@@ -38,8 +38,7 @@
         margin: 10px 0;
     }
 
-    .instruction,
-    .customerreference {
+    .instruction {
         margin-bottom: 10px;
     }
 
@@ -183,26 +182,6 @@
             </div>
             <p>These will be supplied by Reprints Desk as ID and value pairs and should be entered here. To delete an instruction, remove its value</p>
         </div>
-        <h4 class="section_header">Customer references</h4>
-        <div id="reprintsdesk_customerreferences" class="ill_config_field">
-            <div id="key_values_customerreferences">
-                [% FOREACH customerreference IN customerreferences %]
-                    <div class="customerreference">
-                        <label for="reprintsdesk_customerreferences_id_[% loop.index %]">Customer reference ID: </label>
-                        <input id="reprintsdesk_customerreferences_id_[% loop.index %]" class="customer_reference_id" placeholder="Enter customer reference ID" type="text" name="customerreferences_id_[% loop.index %]" value="[% customerreference.keys.0 | html %]">
-                        <label for="reprintsdesk_customerreferences_value_[% loop.index %]">Customer reference value: </label>
-                        <input id="reprintsdesk_customerreferences_value_[% loop.index %]" class="customer_reference_value" placeholder="Enter customer reference value" type="text" name="customerreferences_value_[% loop.index %]" value="[% customerreference.values.0 | html %]">
-                    </div>
-                [% END %]
-                <div class="customerreference">
-                    <label for="reprintsdesk_customerreferences_id_[% customerreferences_size %]">Customer reference ID: </label>
-                    <input id="reprintsdesk_customerreferences_id_[% customerreferences_size %]" class="customer_reference_id" placeholder="Enter customer reference ID" type="text" name="customerreferences_id_[% customerreferences_size %]" value="">
-                    <label for="reprintsdesk_customerreferences_value_[% customerreferences_size %]">Customer reference value: </label>
-                    <input id="reprintsdesk_customerreferences_value_[% customerreferences_size %]" class="customer_reference_value" placeholder="Enter customer reference value" type="text" name="customerreferences_value_[% customerreferences_size %]" value="">
-                </div>
-            </div>
-            <p>To delete an customer reference, remove its value</p>
-        </div>
         <h4 class="section_header">Environment</h4>
         <div id="reprintsdesk_environment" class="ill_config_field">
             <input type="radio" id="reprintsdesk_environment_input_dev" name="environment" value="dev" [% IF config.environment == 'dev' || !config.environment %]checked[% END %]>
@@ -273,7 +252,7 @@
         }
         
         // Now check input groups
-        if (!testGroupCompletion('processing_instruction') || !testGroupCompletion('customer_reference')) {
+        if (!testGroupCompletion('processing_instruction')) {
             displayWarning();
             return;
         }
