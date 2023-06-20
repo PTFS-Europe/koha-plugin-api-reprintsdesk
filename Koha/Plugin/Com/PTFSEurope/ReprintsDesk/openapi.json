@@ -13,6 +13,11 @@
                     "schema": {
                         "type": "object",
                         "properties": {
+                            "illrequest_id": {
+                                "type": "integer",
+                                "description": "ILL request ID",
+                                "additionalProperties": false
+                            },
                             "orderdetail": {
                                 "type": "object",
                                 "properties": {

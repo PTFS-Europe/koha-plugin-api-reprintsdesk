@@ -27,6 +27,7 @@ sub PlaceOrder2 {
     my $plugin = Koha::Plugin::Com::PTFSEurope::ReprintsDesk->new();
     my $config = decode_json($plugin->retrieve_data("reprintsdesk_config") || {});
 
+    my $illrequest_id = delete $body->{illrequest_id} || {};
     my $metadata = $body || {};
 
     $metadata->{orderdetail}->{ordertypeid} = $config->{ordertypeid};
@@ -41,8 +42,7 @@ sub PlaceOrder2 {
     my $processinginstructions = _get_processing_instructions();
     $metadata->{processinginstructions} = ${$processinginstructions}[0];
 
-    my $customerreferences = _get_customer_references();
-    $metadata->{customerreferences} = ${$customerreferences}[0];
+    $metadata->{customerreferences} = { customerreference => $illrequest_id };
 
     # Some deliveryprofile fields may need completing with fallback values from the config
     # if the requesting borrower doesn't have them populated.
@@ -130,14 +130,15 @@ sub PlaceOrder2 {
     my $smart = XML::Smart->new;
     $smart->{wrapper} = { xmlNode => { order => $metadata  } };
 
-    # All orderdetail, user, deliveryprofile properties should be elements
+    # All orderdetail, user, deliveryprofile, customerreferences properties should be elements
     # So we need to force that
     # This also ensures we have elements for each as seemingly the API will
     # complain if some non-required elements are not present
     my $to_tag = {
         'orderdetail'     => ['deliverymethodid', 'ordertypeid', 'comment', 'aulast', 'aufirst', 'issn', 'eissn', 'isbn', 'title', 'atitle', 'volume', 'issue', 'spage', 'epage', 'pages', 'date', 'doi', 'pubmedid'],
         'user'            => ['firstname', 'lastname', 'email', 'username', 'billingreference'],
-        'deliveryprofile' => ['firstname', 'lastname', 'companyname', 'address1', 'address2', 'city', 'statecode', 'statename', 'zip', 'countrycode', 'email', 'phone', 'fax']
+        'deliveryprofile' => ['firstname', 'lastname', 'companyname', 'address1', 'address2', 'city', 'statecode', 'statename', 'zip', 'countrycode', 'email', 'phone', 'fax'],
+        'customerreferences' => ['customerreference']
     };
     foreach my $tag_key(keys %{$to_tag}) {
         foreach my $key(@{$to_tag->{$tag_key}}) {
@@ -161,6 +162,10 @@ sub PlaceOrder2 {
     }
 
     $smart->{wrapper}->{xmlNode}->{order}->{xmlns} = '';
+
+    # customerreference property needs to be CDATA and id="1"
+    $smart->{wrapper}->{xmlNode}->{order}->{customerreferences}->{customerreference}->set_cdata;
+    $smart->{wrapper}->{xmlNode}->{order}->{customerreferences}->{customerreference}->{id} = "1";
 
     my $dom = XML::LibXML->load_xml(string => $smart->data(noheader => 1, nometagen => 1));
     my @nodes = $dom->findnodes('/root/wrapper/xmlNode');
@@ -335,23 +340,6 @@ sub _get_processing_instructions {
     }
 
     return \@processinginstructions;
-}
-
-sub _get_customer_references {
-    my $plugin = Koha::Plugin::Com::PTFSEurope::ReprintsDesk->new();
-    my $config = decode_json($plugin->retrieve_data("reprintsdesk_config") || {});
-
-    my @customerreferences = ();
-
-    if ($config->{customerreferences}) {
-        my @pairs = split '_', $config->{customerreferences};
-        foreach my $pair(@pairs) {
-            my ($key, $value) = split ":", $pair;
-            push @customerreferences, { customerreference => { id => $key, value => $value } };
-        }
-    }
-
-    return \@customerreferences;
 }
 
 sub _get_environment {
