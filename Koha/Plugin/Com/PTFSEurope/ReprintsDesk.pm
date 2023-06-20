@@ -10,14 +10,14 @@ use Cwd            qw(abs_path);
 use CGI;
 use JSON qw( encode_json decode_json );
 
-our $VERSION = "1.1.0";
+our $VERSION = "1.2.0";
 
 our $metadata = {
     name            => 'Reprints Desk',
-    author          => 'Andrew Isherwood',
+    author          => 'PTFS-Europe',
     date_authored   => '2022-04-26',
-    date_updated    => "2023-05-19",
-    minimum_version => '18.05.00.000',
+    date_updated    => "2023-06-20",
+    minimum_version => '22.11.05.000',
     maximum_version => undef,
     version         => $VERSION,
     description     => 'This plugin provides Koha API routes enabling access to the Reprints Desk API'
