@@ -231,6 +231,32 @@
             }
         }
     },
+    "/checkavailability": {
+        "post": {
+            "x-mojo-to": "Com::PTFSEurope::ReprintsDesk::Api#CheckAvailability",
+            "operationId": "ApiReprintsDeskILLCheckAvailability",
+            "tags": ["reprintsdesk", "checkavailability"],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "The request payload containing DOIs",
+                    "required": true,
+                    "schema": {
+                        "type": "array"
+                    }
+                }
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "The result of the checkavailability call"
+                }
+            }
+        }
+    },
     "/account_getintendeduses": {
         "get": {
             "x-mojo-to": "Com::PTFSEurope::ReprintsDesk::Api#Account_GetIntendedUses",
