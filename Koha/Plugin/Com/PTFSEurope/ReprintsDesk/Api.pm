@@ -288,7 +288,7 @@ sub GetPriceEstimate {
     $smart->{wrapper}->{xmlInput}->{input}->{totalpages} = 10;
     $smart->{wrapper}->{xmlInput}->{input}->{totalpages}->set_tag;
 
-    $smart->{wrapper}->{xmlInput}->{input}->{pricetypeid} = 1;    #TODO: Grab this from the config
+    $smart->{wrapper}->{xmlInput}->{input}->{pricetypeid} = $config->{pricetypeid};
     $smart->{wrapper}->{xmlInput}->{input}->{pricetypeid}->set_tag;
 
     my $dom   = XML::LibXML->load_xml( string => $smart->data( noheader => 1, nometagen => 1 ) );
