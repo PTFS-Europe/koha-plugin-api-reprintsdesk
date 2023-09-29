@@ -223,6 +223,47 @@ sub GetOrderHistory {
     );
 }
 
+sub CheckAvailability {
+    my $c = shift->openapi->valid_input or return;
+
+    my $body         = $c->req->body;
+    my $ids_to_check = decode_json($body) || {};
+
+    my $client = _build_client('ArticleShelf_CheckAvailability');
+
+    my $smart = XML::Smart->new;
+    $smart->{wrapper}->{inputXmlNode}->{input}->{schemaversionid} = '1';
+
+    foreach my $id_to_check ( @{$ids_to_check} ) {
+        push @{ $smart->{wrapper}->{inputXmlNode}->{input}->{citations}->{citation} }, $id_to_check;
+    }
+
+    foreach my $citation ( @{ $smart->{wrapper}->{inputXmlNode}->{input}->{citations}->{citation} } ) {
+        $citation->{doi}->set_tag    if !$citation->{pmid};
+        $citation->{doi}->set_cdata  if !$citation->{pmid};
+        $citation->{pmid}->set_tag   if !$citation->{doi};
+        $citation->{pmid}->set_cdata if !$citation->{doi};
+    }
+
+    $smart->{wrapper}->{inputXmlNode}->{input}->{citations}->{xmlns} = '';
+
+    my $dom   = XML::LibXML->load_xml( string => $smart->data( noheader => 1, nometagen => 1 ) );
+    my @nodes = $dom->findnodes('/wrapper/inputXmlNode');
+
+    my $response = _make_request(
+        $client,
+        { inputXmlNode => $nodes[0] },
+        'ArticleShelf_CheckAvailabilityResponse'
+    );
+
+    my $code = scalar @{ $response->{errors} } > 0 ? 500 : 200;
+
+    return $c->render(
+        status  => $code,
+        openapi => $response
+    );
+}
+
 sub Account_GetIntendedUses {
     my $c = shift->openapi->valid_input or return;
 
