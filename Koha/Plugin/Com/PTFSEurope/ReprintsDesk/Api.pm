@@ -394,7 +394,9 @@ sub _make_request {
     my $errors = $response->{error} ? [ { message => $response->{error}->{reason} } ] : [];
 
     return {
-        $result->{xmlData}->{_} ? ( xmlData => $result->{xmlData}->{_}->serialize ) : (),
+        $result->{xmlData}->{_}       ? ( xmlData       => $result->{xmlData}->{_}->serialize )       : (),
+        $result->{outputXmlNode}->{_} ? ( outputXmlNode => $result->{outputXmlNode}->{_}->serialize ) : (),
+        $result->{xmlOutput}->{_}     ? ( xmlOutput     => $result->{xmlOutput}->{_}->serialize )     : (),
         result => $result,
         errors => $errors
     };
