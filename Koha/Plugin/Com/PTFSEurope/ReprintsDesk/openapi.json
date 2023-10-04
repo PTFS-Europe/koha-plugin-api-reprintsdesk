@@ -257,6 +257,46 @@
             }
         }
     },
+    "/getpriceestimate": {
+        "post": {
+            "x-mojo-to": "Com::PTFSEurope::ReprintsDesk::Api#GetPriceEstimate",
+            "operationId": "ApiReprintsDeskILLGetPriceEstimate",
+            "tags": ["reprintsdesk", "getpriceestimate"],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "The request payload containing standardNumber",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "standardNumber": {
+                                "type": "string",
+                                "description": "The standardNumber for Order_GetPriceEstimate2",
+                                "additionalProperties": false
+                            },
+                            "year": {
+                                "type": "string",
+                                "description": "The year for Order_GetPriceEstimate2",
+                                "additionalProperties": false
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": [ "standardNumber" ]
+                    }
+                }
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "The result of the getpriceestimate call"
+                }
+            }
+        }
+    },
     "/account_getintendeduses": {
         "get": {
             "x-mojo-to": "Com::PTFSEurope::ReprintsDesk::Api#Account_GetIntendedUses",
