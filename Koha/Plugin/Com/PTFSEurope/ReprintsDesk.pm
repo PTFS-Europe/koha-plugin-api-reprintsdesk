@@ -10,13 +10,13 @@ use Cwd            qw(abs_path);
 use CGI;
 use JSON qw( encode_json decode_json );
 
-our $VERSION = "1.2.0";
+our $VERSION = "2.0.0";
 
 our $metadata = {
     name            => 'Reprints Desk',
     author          => 'PTFS-Europe',
     date_authored   => '2022-04-26',
-    date_updated    => "2023-06-20",
+    date_updated    => "2023-10-04",
     minimum_version => '22.11.05.000',
     maximum_version => undef,
     version         => $VERSION,
