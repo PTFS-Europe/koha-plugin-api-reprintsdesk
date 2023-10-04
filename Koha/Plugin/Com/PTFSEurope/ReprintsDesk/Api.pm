@@ -264,6 +264,50 @@ sub CheckAvailability {
     );
 }
 
+sub GetPriceEstimate {
+    my $c = shift->openapi->valid_input or return;
+
+    my $body = $c->validation->param('body');
+
+    my $plugin   = Koha::Plugin::Com::PTFSEurope::ReprintsDesk->new();
+    my $config   = decode_json( $plugin->retrieve_data("reprintsdesk_config") || {} );
+    my $metadata = $body || {};
+
+    my $client = _build_client('Order_GetPriceEstimate2');
+
+    my $smart = XML::Smart->new;
+    $smart->{wrapper}->{xmlInput}->{input}->{xmlns} = '';
+    $smart->{wrapper}->{xmlInput}->{input}->{schemaversionid} = '1';
+
+    $smart->{wrapper}->{xmlInput}->{input}->{standardnumber} = $metadata->{standardNumber};
+    $smart->{wrapper}->{xmlInput}->{input}->{standardnumber}->set_tag;
+
+    $smart->{wrapper}->{xmlInput}->{input}->{year} = $metadata->{year};
+    $smart->{wrapper}->{xmlInput}->{input}->{year}->set_tag;
+
+    $smart->{wrapper}->{xmlInput}->{input}->{totalpages} = 10;
+    $smart->{wrapper}->{xmlInput}->{input}->{totalpages}->set_tag;
+
+    $smart->{wrapper}->{xmlInput}->{input}->{pricetypeid} = 1;    #TODO: Grab this from the config
+    $smart->{wrapper}->{xmlInput}->{input}->{pricetypeid}->set_tag;
+
+    my $dom   = XML::LibXML->load_xml( string => $smart->data( noheader => 1, nometagen => 1 ) );
+    my @nodes = $dom->findnodes('/wrapper/xmlInput');
+
+    my $response = _make_request(
+        $client,
+        { xmlInput => $nodes[0] },
+        'Order_GetPriceEstimate2Response'
+    );
+
+    my $code = scalar @{ $response->{errors} } > 0 ? 500 : 200;
+
+    return $c->render(
+        status  => $code,
+        openapi => $response
+    );
+}
+
 sub Account_GetIntendedUses {
     my $c = shift->openapi->valid_input or return;
 
