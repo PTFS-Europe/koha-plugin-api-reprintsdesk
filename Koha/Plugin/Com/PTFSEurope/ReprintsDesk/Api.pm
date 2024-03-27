@@ -50,7 +50,7 @@ sub PlaceOrder2 {
 
     # If the config says we should use borrower properties for deliveryprofile values
     # use as many as we can, these should have come in the payload
-    my ($metadata, $metadata_deliveryprofile_error) = _populate_missing_properties(
+    my $metadata_deliveryprofile_error = _populate_missing_properties(
         $metadata,
         $config,
         $check_populated_delivery_profile,
@@ -364,7 +364,7 @@ sub _populate_missing_properties {
                 } else {
 
                     # Neither the borrower or the config have the required value, return for error handling
-                    return ( undef, $metadata_name );
+                    return $metadata_name;
                 }
             }
         } else {
@@ -375,11 +375,10 @@ sub _populate_missing_properties {
             } else {
 
                 # The config does not have the required value, return for error handling
-                return ( undef, $metadata_name );
+                return $metadata_name;
             }
         }
     }
-    return ( $metadata, undef );
 }
 
 sub _make_request {
