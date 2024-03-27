@@ -10,7 +10,7 @@ use Cwd            qw(abs_path);
 use CGI;
 use JSON qw( encode_json decode_json );
 
-our $VERSION = "2.0.3";
+our $VERSION = "2.0.4";
 
 our $metadata = {
     name            => 'Reprints Desk',
